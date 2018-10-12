@@ -50,6 +50,7 @@
 #include <AP_Relay/AP_Relay.h>       // APM relay
 #include <AP_Camera/AP_Camera.h>          // Photo or video camera
 #include <AP_Airspeed/AP_Airspeed.h>
+#include <AP_Wingsensors/AP_Wingsensors.h>
 #include <AP_Terrain/AP_Terrain.h>
 #include <AP_RPM/AP_RPM.h>
 #include <AP_Stats/AP_Stats.h>     // statistics library
@@ -404,6 +405,9 @@ private:
  
     // Airspeed Sensors
     AP_Airspeed airspeed;
+    
+    // Wing Sensors
+    AP_Wingsensors wingsensors;
 
     // ACRO controller state
     struct {
@@ -960,6 +964,7 @@ private:
     void zero_airspeed(bool in_startup);
     void read_battery(void);
     void read_receiver_rssi(void);
+    void read_wing_sensors(void);    
     void rpm_update(void);
     void button_update(void);
     void stats_update();
