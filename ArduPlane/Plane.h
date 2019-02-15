@@ -407,8 +407,11 @@ private:
     AP_Airspeed airspeed;
     
     // Wing Sensors
-    AP_Wingsensors wingsensors;
+    wingsensors_t wing_sensors;
 
+    // 3D Airspeed
+    uint16_t three_d_airspeed[5];
+    
     // ACRO controller state
     struct {
         bool locked_roll;

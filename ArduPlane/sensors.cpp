@@ -143,37 +143,6 @@ void Plane::read_receiver_rssi(void)
 }
 
 /*
-  ask airspeed sensor for a new value
- */
-void Plane::read_wing_sensors(void)
-{
-    if (airspeed.enabled()) {
-        airspeed.read();
-        if (should_log(MASK_LOG_IMU)) {
-            DataFlash.Log_Write_Airspeed(airspeed);
-        }
-
-        // supply a new temperature to the barometer from the digital
-        // airspeed sensor if we can
-        float temperature;
-        if (airspeed.get_temperature(temperature)) {
-            barometer.set_external_temperature(temperature);
-        }
-    }
-
-    // we calculate airspeed errors (and thus target_airspeed_cm) even
-    // when airspeed is disabled as TECS may be using synthetic
-    // airspeed for a quadplane transition
-    calc_airspeed_errors();
-    
-    // update smoothed airspeed estimate
-    float aspeed;
-    if (ahrs.airspeed_estimate(&aspeed)) {
-        smoothed_airspeed = smoothed_airspeed * 0.8f + aspeed * 0.2f;
-    }
-}
-
-/*
   update RPM sensors
  */
 void Plane::rpm_update(void)

@@ -18,6 +18,8 @@
 #include <AP_HAL/utility/RingBuffer.h>
 #include <AP_Frsky_Telem/AP_Frsky_Telem.h>
 #include <AP_ServoRelayEvents/AP_ServoRelayEvents.h>
+#include "AP_Wingsensors/AP_Wingsensors.h"
+
 
 // check if a message will fit in the payload space available
 #define HAVE_PAYLOAD_SPACE(chan, id) (comm_get_txspace(chan) >= GCS_MAVLINK::packet_overhead_chan(chan)+MAVLINK_MSG_ID_ ## id ## _LEN)
@@ -74,6 +76,8 @@ enum ap_message {
     MSG_BATTERY_STATUS,
     MSG_AOA_SSA,
     MSG_LANDING,
+    MSG_WING_SENSORS,
+    MSG_THREE_D_AIRSPEED,
     MSG_RETRY_DEFERRED // this must be last
 };
 
@@ -164,6 +168,8 @@ public:
     void send_raw_imu(const AP_InertialSensor &ins, const Compass &compass);
     void send_scaled_pressure(AP_Baro &barometer);
     void send_sensor_offsets(const AP_InertialSensor &ins, const Compass &compass, AP_Baro &barometer);
+    void send_wing_sensor_values(wingsensors_t &wing_sensors);
+    void send_3d_airspeed_values(uint16_t * three_d_airspeed);
     void send_ahrs(AP_AHRS &ahrs);
     void send_battery2(const AP_BattMonitor &battery);
 #if AP_AHRS_NAVEKF_AVAILABLE

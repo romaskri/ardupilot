@@ -18,6 +18,7 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_OpticalFlow/AP_OpticalFlow.h>
 #include <AP_Vehicle/AP_Vehicle.h>
+#include <AP_Wingsensors/AP_Wingsensors.h>
 
 #include "ap_version.h"
 #include "GCS.h"
@@ -1142,6 +1143,31 @@ void GCS_MAVLINK::send_scaled_pressure(AP_Baro &barometer)
             (pressure - barometer.get_ground_pressure(2))*0.01f, // hectopascal
             barometer.get_temperature(2)*100); // 0.01 degrees C        
     }
+}
+
+void GCS_MAVLINK::send_wing_sensor_values(wingsensors_t &wing_sensors)
+{
+    // uint32_t now = AP_HAL::millis();
+    mavlink_msg_wing_sensor_values_send(chan,
+                                        wing_sensors.left[0], 
+                                        wing_sensors.left[1],
+                                        wing_sensors.left[2], 
+                                        wing_sensors.left[3],
+                                        wing_sensors.right[0],
+                                        wing_sensors.right[1],
+                                        wing_sensors.right[2], 
+                                        wing_sensors.right[3]);
+}
+
+void GCS_MAVLINK::send_3d_airspeed_values(uint16_t * three_d_airspeed)
+{
+    mavlink_msg_three_d_airspeed_values_send(chan,
+                                      three_d_airspeed[0],
+                                      three_d_airspeed[1],
+                                      three_d_airspeed[2],
+                                      three_d_airspeed[3],
+                                      three_d_airspeed[4]
+                                      );
 }
 
 void GCS_MAVLINK::send_sensor_offsets(const AP_InertialSensor &ins, const Compass &compass, AP_Baro &barometer)

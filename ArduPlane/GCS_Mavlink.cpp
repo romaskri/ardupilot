@@ -545,6 +545,16 @@ bool GCS_MAVLINK_Plane::try_send_message(enum ap_message id)
         send_sensor_offsets(plane.ins, plane.compass, plane.barometer);
         break;
 
+    case MSG_WING_SENSORS:
+        // CHECK_PAYLOAD_SIZE(WING_SENSOR_VALUES);
+        send_wing_sensor_values(plane.wing_sensors);
+        break;
+
+    case MSG_THREE_D_AIRSPEED:
+        // CHECK_PAYLOAD_SIZE(THREE_D_AIRSPEED);
+        send_3d_airspeed_values(plane.three_d_airspeed);
+        break;
+        
     case MSG_CURRENT_WAYPOINT:
         CHECK_PAYLOAD_SIZE(MISSION_CURRENT);
         plane.send_current_waypoint(chan);
@@ -832,6 +842,7 @@ GCS_MAVLINK_Plane::data_stream_send(void)
         send_message(MSG_RAW_IMU1);
         send_message(MSG_RAW_IMU2);
         send_message(MSG_RAW_IMU3);
+        send_message(MSG_WING_SENSORS);
     }
 
     if (plane.gcs_out_of_time) return;
@@ -1932,7 +1943,18 @@ void GCS_MAVLINK_Plane::handleMessage(mavlink_message_t* msg)
     case MAVLINK_MSG_ID_UAVIONIX_ADSB_TRANSCEIVER_HEALTH_REPORT:
         plane.adsb.handle_message(chan, msg);
         break;
-
+    case MAVLINK_MSG_ID_WING_SENSOR_VALUES:
+        mavlink_wing_sensor_values_t wing_values;
+        mavlink_msg_wing_sensor_values_decode(msg, &wing_values);
+        plane.wing_sensors.left[0] = wing_values.sens_1_l;
+        plane.wing_sensors.left[1] = wing_values.sens_2_l;
+        plane.wing_sensors.left[2] = wing_values.sens_3_l;
+        plane.wing_sensors.left[3] = wing_values.sens_4_l;
+        plane.wing_sensors.right[0] = wing_values.sens_1_r;
+        plane.wing_sensors.right[1] = wing_values.sens_2_r;
+        plane.wing_sensors.right[2] = wing_values.sens_3_r;
+        plane.wing_sensors.right[3] = wing_values.sens_4_r;
+        break;
     default:
         handle_common_message(msg);
         break;
