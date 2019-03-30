@@ -967,7 +967,7 @@ private:
     void zero_airspeed(bool in_startup);
     void read_battery(void);
     void read_receiver_rssi(void);
-    void read_wing_sensors(void);    
+    // void read_wing_sensors(void);    
     void rpm_update(void);
     void button_update(void);
     void stats_update();
